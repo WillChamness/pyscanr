@@ -12,5 +12,5 @@ setup(
         "console_scripts": ["pyscanr = pyscanr:scan_subnet"]
     },
     long_description=description,
-    long_description_type="text/markdown",
+    long_description_content_type="text/markdown",
 )
