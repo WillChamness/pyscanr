@@ -1,1 +1,3 @@
-from .main import scan_subnet
+from .pyscanr import *
+from .cli import _init
+
