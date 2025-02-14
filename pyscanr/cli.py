@@ -1,8 +1,15 @@
 import argparse
+import sys
 from pyscanr import scan_subnet_user, scan_subnet
 from socket import gethostbyname, gethostname
 
 def _init() -> None:
+    # enable colored text in terminal in Windows
+    if sys.platform.lower() == "win32":
+        import ctypes
+        kernel32 = ctypes.windll.kernel32
+        kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+
     parser = argparse.ArgumentParser(add_help=False, description="Pings a range of IP addresses")
 
     parser.add_argument("subnet", type=str, help="a.b.c.d/xy")
@@ -10,7 +17,7 @@ def _init() -> None:
     parser.add_argument("-s", "--source", required=False, type=str, help="The source address to ping from. If not specified, a best effort will be made to decide the source address.")
     parser.add_argument("-v", "--verbose", action="store_true", help="Show information in real time")
     parser.add_argument("-a", "--all-hosts", action="store_true", help="Print all hosts, including unreachable ones")
-    parser.add_argument("-u", "--user", action="store_true", help="Run in user mode if using Linux. Generally significantly faster, but may spike CPU usage. Not recommended for medium- to large-sized networks.")
+    parser.add_argument("-u", "--user", action="store_true", help="Run in user mode. Generally significantly faster, but may spike CPU usage. Not recommended for medium- to large-sized networks.")
 
     args = parser.parse_args()
 
