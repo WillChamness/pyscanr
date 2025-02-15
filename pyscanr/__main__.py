@@ -1,2 +1,2 @@
-from cli import _init
-_init()
+from . import run as main
+main()

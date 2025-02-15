@@ -3,9 +3,10 @@ import logging
 import subprocess
 import ipaddress
 import socket
+import asyncio
 from threading import Thread
 from scapy.all import IP, ICMP, sr1
-from typing import Iterator
+from typing import Iterator, Awaitable
 
 class Colors:
     RED: str = "\x1b[0;31m"
@@ -116,9 +117,53 @@ def ping_host(src: str, dst: str) -> bool:
         return False
 
 
+async def ping_host_async(src: str, dst: str, verbose: bool=False) -> dict[str, bool]:
+    ICMP_ECHO_REQUEST_DEFAULT_CODE = 0
+    icmp = ICMP(type=IcmpTypes.ECHO_REQUEST, code=ICMP_ECHO_REQUEST_DEFAULT_CODE)
+    ip = IP(src=src, dst=dst)
+
+    response = await asyncio.get_running_loop().run_in_executor(None, lambda : sr1(ip / icmp, verbose=0, timeout=0.1, retry=1))
+    if verbose:
+        print(dst)
+    if response:
+        return {dst: response["ICMP"].type == IcmpTypes.ECHO_REPLY}
+    else:
+        return {dst: False}
+
+
+def scan_subnet_async(src: str, dst_subnet: str, print_all: bool=False, verbose: bool=False) -> None:
+    async def run(src: str, dst: ipaddress.IPv4Network, print_all: bool, verbose: bool) -> None:
+        coroutines: list[Awaitable[dict[str, bool]]] = [ping_host_async(src, str(host), verbose=verbose) for host in dst]
+        results: dict[str, bool] = {}
+
+        for coroutine in asyncio.as_completed(coroutines):
+            ping_result: dict[str, bool] = await coroutine
+            results = {**results, **ping_result}
+
+        for host in subnet.hosts():
+            ip_addr = str(host)
+            if results[ip_addr]:
+                print(f"{Colors.GREEN}{ip_addr}{Colors.RESET}: ICMP echo reply received")
+            elif print_all:
+                print(f"{Colors.RED}{ip_addr}{Colors.RESET}: ICMP echo reply not received")
+
+
+    if not validate_ip(src):
+        print(f"{Colors.RED}{src}{Colors.RESET} is not a valid IP address!")
+        return
+    if not validate_subnet(dst_subnet):
+        print(f"{Colors.RED}{dst_subnet}{Colors.RESET} is not a valid subnet!")
+        return
+    try:
+        subnet = ipaddress.IPv4Network(dst_subnet)
+    except ValueError:
+        print(f"{Colors.RED}{dst_subnet}{Colors.RESET} has host bits set!")
+        return
+
+    asyncio.run(run(src, subnet, print_all, verbose))
+
+
 def scan_subnet(src: str, dst_subnet: str, print_all: bool=False, verbose: bool=False) -> None:
-    if not verbose:
-        logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
     if not validate_ip(src):
         print(f"{Colors.RED}{src}{Colors.RESET} is not a valid IP address!")
         return
@@ -221,7 +266,7 @@ def scan_subnet_user(src: str, dst_subnet: str, print_all: bool=False, verbose: 
 
 
 def insertion_sort(ip_addresses: list[str]) -> None:
-    def swap(i, j, lst):
+    def swap(i: int, j: int, lst: list[str]) -> None:
         tmp = lst[i]
         lst[i] = lst[j]
         lst[j] = tmp
