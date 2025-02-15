@@ -38,35 +38,35 @@ sudo ln -s /home/myusername/.local/pipx/venvs/pyscanr/bin/pyscanr pyscanr
 To update for root, your user will have to run `pipx upgrade pyscanr`
 
 ## Windows
-- Download the `pyscanr.exe` file from the Releases page
-- Create the `%USERPROFILE%\.local` and `%USERPROFILE%\.local\bin` folders
-- Move `pyscanr.exe` to `%USERPROFILE%\.local\bin`
-- Add `%USERPROFILE%\.local\bin` to your user's PATH
- - Open File Explorer
- - Right click `This PC`
- - Click `Properties`
- - Click `Advanced system settings`
- - Go to the `Advanced` tab
- - Click `Environment Variables`
- - Double click `PATH` for your user (NOT the system)
- - Click `New` and add `%USERPROFILE%\.local\bin`
-- Open a new CMD instance
-- Run `pyscanr -h` to verify installation
+* Download the `pyscanr.exe` file from the Releases page
+* Create the `%USERPROFILE%\.local` and `%USERPROFILE%\.local\bin` folders
+* Move `pyscanr.exe` to `%USERPROFILE%\.local\bin`
+* Add `%USERPROFILE%\.local\bin` to your user's PATH
+    1. Open File Explorer
+    2. Right click `This PC`
+    3. Click `Properties`
+    4. Click `Advanced system settings`
+    5. Go to the `Advanced` tab
+    6. Click `Environment Variables`
+    7. Double click `PATH` for your user (NOT the system)
+    8. Click `New` and add `%USERPROFILE%\.local\bin`
+* Open a new CMD instance
+* Run `pyscanr -h` to verify installation
  
 ## Linux
-- Download the `pyscanr.linux` file from the Releases page
-- If you want to add this program to your user only:
- - Run `mkdir -p ~/.local/bin`
- - Assuming the executable is in your Downloads folder, run `mv ~/Downloads/pyscanr.linux ~/.local/bin/pyscanr`
- - Run `chmod u+x ~/.local/bin/pyscanr`
- - Add `$HOME/.local/bin` to your $PATH
-  - Exact steps may vary. If using Bash:
-  - Add `export PATH=$HOME/.local/bin/:$PATH` to your `.bashrc` file
-  - To run with root, you may have to run `sudo $(which pyscanr)`
-- If you want to install globally:
- - Assuming the executable is in your Downloads folder, run `sudo mv ~/Downloads/pyscanr.linux /usr/bin/pyscanr`
-- Open a new terminal instance
-- Run `pyscanr -h` to verify installation
+* Download the `pyscanr.linux` file from the Releases page
+* If you want to add this program to your user only:
+    1. Run `mkdir -p ~/.local/bin`
+    2. Assuming the executable is in your Downloads folder, run `mv ~/Downloads/pyscanr.linux ~/.local/bin/pyscanr`
+    3. Run `chmod u+x ~/.local/bin/pyscanr`
+    4. Add `$HOME/.local/bin` to your $PATH
+        * Exact steps may vary. If using Bash:
+        * Add `export PATH=$HOME/.local/bin/:$PATH` to your `.bashrc` file
+    5. To run with root, you may have to run `sudo $(which pyscanr)`
+* If you want to install globally:
+    * Assuming the executable is in your Downloads folder, run `sudo mv ~/Downloads/pyscanr.linux /usr/bin/pyscanr`
+* Open a new terminal instance
+* Run `pyscanr -h` to verify installation
 
 
 ## Run Directly With Python
@@ -93,15 +93,15 @@ pip install -r requirements.txt
 Verify installation with `python -m pyscanr -h`
 
 ### Downloading from github.com
-- Click `Code` and `Download ZIP`
-- Extract and navigate to your terminal to the root of the project
-- Run the following commands:
+* Click `Code` and `Download ZIP`
+* Extract and navigate to your terminal to the root of the project
+* Run the following commands:
 ```
 python -m venv env
 source env/scripts/activate || env\Scripts\activate
 pip install -r requirements.txt
 ```
-- If using PowerShell:
+* If using PowerShell:
 ```
 python -m venv env
 env\Scripts\activate.ps1
